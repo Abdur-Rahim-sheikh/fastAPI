@@ -12,6 +12,8 @@ class Item(BaseModel):
 app = FastAPI()
 
 
-@app.post("/items/")
-async def create_item(item: Item):
+@app.post("/items/{price}")
+async def create_item(item: Item, item2: Item, price: int, name: str):
+    item.name = name or item.name
+    item.price = price
     return item
