@@ -33,3 +33,11 @@ Just declaring a type let's see what fastapi does with it:
    - As you declared it in the function to be of type Item, you will also have all the editor support (completion, etc) for all of the attributes and their types.
 5. Generate JSON Schema definitions for your model, you can also use them anywhere else you like if it makes sense for your project.
 6. Those schemas will be part of the generated OpenAPI schema, and used by the automatic documentation UIs.
+
+#### path parameters + query parameters + request body
+
+The function parameters will be recognized as below:
+
+- If the parameter is also declared in the path, it will be used as a path parameter.
+- If the parameter is of a singular type (like int, float, str, bool, etc) it will be interpreted as a query parameter.
+- If the parameter is declared to be of the type of a Pydantic model, it will be interpreted as a request body.
