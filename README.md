@@ -41,3 +41,24 @@ The function parameters will be recognized as below:
 - If the parameter is also declared in the path, it will be used as a path parameter.
 - If the parameter is of a singular type (like int, float, str, bool, etc) it will be interpreted as a query parameter.
 - If the parameter is declared to be of the type of a Pydantic model, it will be interpreted as a request body.
+
+#### Response Model
+
+```python
+@app.post("/items/")
+async def create_item(item: Item) -> Item:
+    return item
+```
+
+FastAPI will use this retrun type to:
+
+- Validate the returned data.
+  - If the data is invalid, it means that your app code is broken, not returning what it should, and it will return a server error instead of returning incorrect data. This way you and your clients can be certain that they will receive the data and the data shape expected.
+- Add a `JSON Schema` for the response, in the OpenAPI path operation,
+  - This will be used by the `automatic docs`.
+  - It will also be used by automatic client code generation tools.
+
+**But most importantly**
+
+- It will `limit and filter` the output data to what is defined in the return type.
+  - This is particularly important for `security`
