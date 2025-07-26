@@ -1,25 +1,31 @@
+from typing import Any
+
 from fastapi import FastAPI
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
 app = FastAPI()
 
 
-class Item(BaseModel):
-    name: str
-    description: str | None = None
-    price: float
-    tax: float | None = None
-    tags: list[str] = []
+class UserIn(BaseModel):
+    username: str
+    password: str
+    email: EmailStr
+    full_name: str | None = None
 
 
-@app.post("/items/")
-async def create_item(item: Item) -> Item:
-    return item
+class UserOut(BaseModel):
+    username: str
+    email: EmailStr
+    full_name: str | None = None
 
 
-@app.get("/items/")
-async def read_items() -> list[Item]:
-    return [
-        Item(name="Portal Gun", price=42.0),
-        Item(name="Plumbus", price=32.0),
-    ]
+@app.post("/user/", response_model=UserOut)
+async def create_user(user: UserIn) -> Any:
+    return user
+
+
+# this will work seamlessly,
+# dropping the password field from the response
+# as it is not included in the UserOut model
+# But if we had added it as return type, editor would complain
+# also, response_model has higher priority than return type in fastAPI
