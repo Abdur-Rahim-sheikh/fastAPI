@@ -18,5 +18,5 @@ async def read_items(commons: Annotated[CommonQueryParams, Depends()]):
 
 
 @app.get("/users/")
-async def read_users(commons: Annotated[CommonQueryParams, Depends()]):
+async def read_users(commons: Annotated[CommonQueryParams, Depends(use_cache=False)]):
     return commons
