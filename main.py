@@ -1,26 +1,19 @@
 from typing import Annotated
 
-from fastapi import Body, FastAPI
-from pydantic import BaseModel
+from fastapi import Depends, FastAPI
 
 app = FastAPI()
 
 
-class Item(BaseModel):
-    name: str
-    description: str | None = None
-    price: float
-    tax: float | None = None
+async def common_parameters(q: str = None, skip: int = 0, limit: int = 100):
+    return {"q": q, "skip": skip, "limit": limit}
 
 
-class User(BaseModel):
-    username: str
-    full_name: str | None = None
+@app.get("/items/")
+async def read_items(commons: Annotated[dict, Depends(common_parameters)]):
+    return commons
 
 
-@app.put("/items/{item_id}")
-async def update_item(
-    item_id: int, item: Item, user: User, importance: Annotated[int, Body()]
-):
-    results = {"item_id": item_id, "item": item, "user": user, "importance": importance}
-    return results
+@app.get("/users/")
+async def read_users(commons: Annotated[dict, Depends(common_parameters)]):
+    return commons
