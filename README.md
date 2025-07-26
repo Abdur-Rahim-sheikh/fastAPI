@@ -84,3 +84,47 @@ def ......
 ```
 
 This allows you to control which fields are only included or particularly excluded in the response model. Thus we can reuse the same model for different endpoints, but only expose the fields that are relevant to that endpoint.
+
+#### Dependency Injection
+
+```python
+
+async def common_parameters(q: str | None = None, skip: int = 0, limit: int = 100):
+    return {"q": q, "skip": skip, "limit": limit}
+
+
+CommonsDep = Annotated[dict, Depends(common_parameters)]
+
+
+@app.get("/items/")
+async def read_items(commons: CommonsDep):
+    return commons
+
+
+@app.get("/users/")
+async def read_users(commons: CommonsDep):
+    return commons
+```
+
+Above code is a showcase of how to use dependency injection in FastAPI.
+It's simple yet very powerful.
+we can make a hierarchy of dependencies, where one dependency can depend on another.
+Let we have 4 endpoints,
+
+- `/items/public`
+- `/items/private`
+- `/users/{user_id}/activate`
+- `/items/pro`
+
+then we can add different permission requirements for each of them just with dependencies and sub-dependencies.
+
+```mermaid
+graph TD;
+    CU(current_user) --> AU(active_user)
+    CU --> IP["/items/public"]
+    AU --> AAU(admin_user)
+    AU --> PU(paying_user)
+    AU --> IVP["/items/private"]
+    AAU --> AUA["/users/{user_id}/activate"]
+    PU --> IPRO["/items/pro"]
+```
