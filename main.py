@@ -1,26 +1,14 @@
-from typing import Annotated
-
-from fastapi import Body, FastAPI
-from pydantic import BaseModel
+from fastapi import FastAPI, HTTPException, status
 
 app = FastAPI()
 
-
-class Item(BaseModel):
-    name: str
-    description: str | None = None
-    price: float
-    tax: float | None = None
+items = {"foo": "The Foo Wrestlers"}
 
 
-class User(BaseModel):
-    username: str
-    full_name: str | None = None
-
-
-@app.put("/items/{item_id}")
-async def update_item(
-    item_id: int, item: Item, user: User, importance: Annotated[int, Body()]
-):
-    results = {"item_id": item_id, "item": item, "user": user, "importance": importance}
-    return results
+@app.get("/items/{item_id}")
+async def read_item(item_id: str):
+    if item_id not in items:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Item not found"
+        )
+    return {"item": items[item_id]}
