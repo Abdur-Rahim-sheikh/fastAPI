@@ -1,6 +1,4 @@
-from typing import Annotated
-
-from fastapi import Body, FastAPI
+from fastapi import FastAPI
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -11,16 +9,17 @@ class Item(BaseModel):
     description: str | None = None
     price: float
     tax: float | None = None
+    tags: list[str] = []
 
 
-class User(BaseModel):
-    username: str
-    full_name: str | None = None
+@app.post("/items/")
+async def create_item(item: Item) -> Item:
+    return item
 
 
-@app.put("/items/{item_id}")
-async def update_item(
-    item_id: int, item: Item, user: User, importance: Annotated[int, Body()]
-):
-    results = {"item_id": item_id, "item": item, "user": user, "importance": importance}
-    return results
+@app.get("/items/")
+async def read_items() -> list[Item]:
+    return [
+        Item(name="Portal Gun", price=42.0),
+        Item(name="Plumbus", price=32.0),
+    ]
