@@ -2,7 +2,13 @@ from typing import Annotated
 
 from fastapi import Depends, FastAPI, Header, HTTPException
 
-app = FastAPI()
+
+async def global_dependency(x_token: Annotated[str, Header()]):
+    if x_token != "fake-global-token":
+        raise HTTPException(status_code=400, detail="X-Token header invalid")
+
+
+app = FastAPI(dependencies=[Depends(global_dependency)])
 
 
 class CommonQueryParams:
