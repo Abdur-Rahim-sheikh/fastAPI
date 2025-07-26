@@ -62,3 +62,25 @@ FastAPI will use this retrun type to:
 
 - It will `limit and filter` the output data to what is defined in the return type.
   - This is particularly important for `security`
+
+##### model_exclude and model_include
+
+```python
+@app.get(
+    "/items/{item_id}/name",
+    response_model=Item,
+    response_model_include={"name", "description"},
+)
+def ......
+```
+
+or
+
+```python
+@app.get("/items/{item_id}/public",
+        response_model=Item,
+        response_model_exclude={"tax"})
+def ......
+```
+
+This allows you to control which fields are only included or particularly excluded in the response model. Thus we can reuse the same model for different endpoints, but only expose the fields that are relevant to that endpoint.
