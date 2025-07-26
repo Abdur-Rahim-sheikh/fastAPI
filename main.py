@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, Header, HTTPException
 
 app = FastAPI()
 
@@ -20,3 +20,22 @@ async def read_items(commons: Annotated[CommonQueryParams, Depends()]):
 @app.get("/users/")
 async def read_users(commons: Annotated[CommonQueryParams, Depends(use_cache=False)]):
     return commons
+
+
+# depencies just to verify
+
+
+async def verify_token(x_token: Annotated[str, Header()]):
+    if x_token != "fake-super-secret-token":
+        raise HTTPException(status_code=400, detail="X-Token header invalid")
+
+
+async def verify_key(x_key: Annotated[str, Header()]):
+    if x_key != "fake-super-secret-key":
+        raise HTTPException(status_code=400, detail="X-Key header invalid")
+    return x_key
+
+
+@app.get("/product/", dependencies=[Depends(verify_token), Depends(verify_key)])
+async def read_products():
+    return [{"item": "Foo"}, {"item": "Bar"}]
