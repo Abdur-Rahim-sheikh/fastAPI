@@ -9,6 +9,7 @@ app = FastAPI()
 class FormData(BaseModel):
     username: str
     password: str
+    model_config = {"extra": "forbid"}
 
 
 @app.post("/login/")
