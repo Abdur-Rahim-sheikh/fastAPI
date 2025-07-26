@@ -1,26 +1,10 @@
 from typing import Annotated
 
-from fastapi import Body, FastAPI
-from pydantic import BaseModel
+from fastapi import FastAPI, Form
 
 app = FastAPI()
 
 
-class Item(BaseModel):
-    name: str
-    description: str | None = None
-    price: float
-    tax: float | None = None
-
-
-class User(BaseModel):
-    username: str
-    full_name: str | None = None
-
-
-@app.put("/items/{item_id}")
-async def update_item(
-    item_id: int, item: Item, user: User, importance: Annotated[int, Body()]
-):
-    results = {"item_id": item_id, "item": item, "user": user, "importance": importance}
-    return results
+@app.post("/login/")
+async def login(username: Annotated[str, Form()], password: Annotated[str, Form()]):
+    return {"username": username}
