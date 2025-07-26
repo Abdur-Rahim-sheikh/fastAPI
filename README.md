@@ -128,3 +128,14 @@ graph TD;
     AAU --> AUA["/users/{user_id}/activate"]
     PU --> IPRO["/items/pro"]
 ```
+
+##### Three levels of dependencies
+
+Dependencies in FastAPI can be applied at three levels:
+
+1. **Parameter level**: Dependencies can be defined as function/class parameters they also return a value which is assigned to the parameter.
+   - `async def read_items(commons: Annotated[dict, Depends(common_parameters)]):`
+2. **Path operation level**: Dependencies can be defined at the path operation level, which need not to return a value
+   - `@app.get("/items/", dependencies=[Depends(verify_token), Depends(verify_key)])`
+3. **Global level**: Dependencies can be defined globally, which are applied to all path operations in the application.
+   - `app = FastAPI(dependencies=[Depends(verify_token), Depends(verify_key)])`
