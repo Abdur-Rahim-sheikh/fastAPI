@@ -24,3 +24,9 @@ async def update_item(
 ):
     results = {"item_id": item_id, "item": item, "user": user, "importance": importance}
     return results
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(app, host="0.0.0.0", port=8000)
