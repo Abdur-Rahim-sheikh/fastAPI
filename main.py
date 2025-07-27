@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import Depends, FastAPI, HTTPException, Query
+from fastapi import Depends, FastAPI, HTTPException, Query, status
 from sqlmodel import Field, Session, SQLModel, create_engine, select
 
 
@@ -32,7 +32,7 @@ SessionDep = Annotated[Session, Depends(get_session)]
 app = FastAPI()
 
 
-@app.lifespan("startup")
+@app.on_event("startup")
 def on_startup():
     create_db_and_tables()
 
@@ -59,3 +59,15 @@ def read_hero(hero_id: int, session: SessionDep) -> Hero:
     if not hero:
         raise HTTPException(status_code=404, detail="Hero not found")
     return hero
+
+
+@app.delete("/heroes/{hero_id}")
+def delete_hero(hero_id: int, session: SessionDep):
+    hero = session.get(Hero, hero_id)
+
+    if not hero:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+
+    session.delete(hero)
+    session.commit()
+    return {"ok": True, "message": "Hero deleted successfully"}
