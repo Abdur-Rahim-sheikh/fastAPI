@@ -139,3 +139,17 @@ Dependencies in FastAPI can be applied at three levels:
    - `@app.get("/items/", dependencies=[Depends(verify_token), Depends(verify_key)])`
 3. **Global level**: Dependencies can be defined globally, which are applied to all path operations in the application.
    - `app = FastAPI(dependencies=[Depends(verify_token), Depends(verify_key)])`
+
+#### Middleware execution order
+
+```python
+app.add_middleware(MiddleWareA)
+app.add_middleware(MiddleWareB)
+```
+
+this results in the following execution order:
+
+- **Request**: MiddleWareB --> MiddleWareA --> route
+- **Response**: route --> MiddleWareA --> MiddleWareB
+
+This stacking behavior ensures that the middlewares are executed in a predictable and controllable order.
