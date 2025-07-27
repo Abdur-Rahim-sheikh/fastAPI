@@ -1,26 +1,24 @@
-from typing import Annotated
-
-from fastapi import Body, FastAPI
-from pydantic import BaseModel
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+origins = [
+    "http://localhost.tiangolo.com",
+    "https://localhost.tiangolo.com",
+    "http://localhost",
+    "http://localhost:8080",
+]
 
-class Item(BaseModel):
-    name: str
-    description: str | None = None
-    price: float
-    tax: float | None = None
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
-class User(BaseModel):
-    username: str
-    full_name: str | None = None
-
-
-@app.put("/items/{item_id}")
-async def update_item(
-    item_id: int, item: Item, user: User, importance: Annotated[int, Body()]
-):
-    results = {"item_id": item_id, "item": item, "user": user, "importance": importance}
-    return results
+@app.get("/")
+async def main():
+    return {"message": "Hello World"}
