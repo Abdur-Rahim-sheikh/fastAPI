@@ -1,5 +1,7 @@
 ### FastAPI iteration
 
+**Final tutorial I'm following after fastAPI official docs.** [Youtube tech with Tim](https://youtu.be/_1P0Uqk50Ps?si=6iZY-z6NFcFYVzbS)
+
 #### request body parsing
 
 ```python
