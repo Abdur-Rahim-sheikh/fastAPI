@@ -1,10 +1,8 @@
 import uuid
-from datetime import datetime
 
 from fastapi import (
     APIRouter,
     BackgroundTasks,
-    Cookie,
     Depends,
     HTTPException,
     Response,
@@ -14,11 +12,10 @@ from sqlalchemy.orm import Session
 
 from background_tasks import generate_story_task
 from data import DefaultStory
-from db.database import SessionLocal, get_db
+from db.database import get_db
 from dependencies import get_session_id
-from models import Story, StoryJob, StoryNode
+from models import Story, StoryJob
 from schemas import (
-    CompleteStoryNodeResponse,
     CompleteStoryResponse,
     CreateStoryRequest,
     StoryJobResponse,
