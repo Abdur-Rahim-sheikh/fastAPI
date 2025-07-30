@@ -5,7 +5,7 @@ from sqlalchemy.sql import func
 from db.database import Base
 
 
-class Story:
+class Story(Base):
     __tablename__ = "stories"
 
     id = Column(Integer, primary_key=True)
@@ -26,7 +26,7 @@ class StoryNode(Base):
     content = Column(String)
     is_root = Column(Boolean, default=False)
     is_winning_ending = Column(Boolean, default=False)
-    options = Column(JSON, default={})
+    options = Column(JSON, default=list)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
