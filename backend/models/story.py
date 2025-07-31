@@ -25,10 +25,8 @@ class StoryNode(Base):
     story_id = Column(Integer, ForeignKey("stories.id"), index=True)
     content = Column(String)
     is_root = Column(Boolean, default=False)
+    is_ending = Column(Boolean, default=False)
     is_winning_ending = Column(Boolean, default=False)
     options = Column(JSON, default=list)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(
-        DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
-    )
+
     story = relationship(Story, back_populates="nodes")
