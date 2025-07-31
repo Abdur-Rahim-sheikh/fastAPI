@@ -22,7 +22,7 @@ STORY_PROMPT = """
                 Don't add any text outside of the JSON structure.
                 """
 
-json_structure = """
+reference_json_structure = """
         {
             "title": "Story Title",
             "rootNode": {
