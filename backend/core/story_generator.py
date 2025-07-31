@@ -1,8 +1,6 @@
-from langchain_community.chat_models import ChatHuggingFace
 from langchain_core.output_parsers import PydanticOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_openai import ChatOpenAI
 from sqlalchemy.orm import Session
 
 from core.config import settings
