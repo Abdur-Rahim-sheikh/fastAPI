@@ -1,7 +1,6 @@
-import uuid
 from typing import Annotated
 
-from fastapi import APIRouter, Cookie, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from db.database import get_db
@@ -12,7 +11,9 @@ router = APIRouter(prefix="/job", tags=["jobs"])
 
 
 @router.get("/{job_id}")
-def get_job_status(job_id: str, db: Annotated[Session, Depends(get_db)]):
+def get_job_status(
+    job_id: str, db: Annotated[Session, Depends(get_db)]
+) -> StoryJobResponse:
     job = db.query(StoryJob).filter(StoryJob.job_id == job_id).first()
 
     if not job:
