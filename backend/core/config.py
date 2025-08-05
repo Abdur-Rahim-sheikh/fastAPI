@@ -1,14 +1,29 @@
 from pydantic import field_validator
 from pydantic_settings import BaseSettings
+import os
 
 
 class Settings(BaseSettings):
     API_PREFIX: str = "/api"
     DEBUG: bool = True
 
-    DATABASE_URL: str
+    DATABASE_URL: str = None
     ALLOWED_ORIGINS: str = ""
     GOOGLE_API_KEY: str
+
+    def __init__(self, **data):
+        super().__init__(**data)
+
+        if not self.DEBUG:
+            db_user = os.getenv("DB_USER")
+            db_password = os.getenv("DB_PASSWORD")
+            db_host = os.getenv("DB_HOST")
+            db_name = os.getenv("DB_NAME")
+            db_port = os.getenv("DB_PORT")
+
+            self.DATABASE_URL = (
+                f"postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
+            )
 
     @field_validator("ALLOWED_ORIGINS")
     def parse_allowed_origins(cls, v):
